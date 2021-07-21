@@ -1,28 +1,14 @@
 import graphene
-from .query_type_models import UserType, USER
 from .query_mutations import Mutation
 
+from graphql_auth.schema import UserQuery, MeQuery
 
-class QueryType(graphene.ObjectType):
-    """
-    This is what read query looks like:
-        query {
-              user(username or id like-> username:"boopDog") {
-                firstName
-                lastName
-                ... -> fetch fields
-              }
-            }
-    """
-    user = graphene.Field(
-        UserType,
-        id=graphene.String(),
-        username=graphene.String()
-    )
 
-    @staticmethod
-    def resolve_user(*args, **kwargs):
-        return USER.objects.filter(**kwargs).first()
+class QueryType(UserQuery, MeQuery, graphene.ObjectType):
+    """
+    This is the schema root, everything here is handled in parent classes.
+    """
+    pass
 
 
 schema = graphene.Schema(
